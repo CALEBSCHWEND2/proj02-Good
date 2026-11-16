@@ -29,7 +29,10 @@ def print_location(location: str) -> None:
     """
     Print the description of the current location.
     """
-    # Copy solution from Part 1 and update to use the rooms list
+    if location in rooms:
+        print(f"You are in the {location}.")
+    else:
+        print("Unknown location.")
         
 def get_directions(location: str) -> str:
     """
@@ -37,14 +40,59 @@ def get_directions(location: str) -> str:
     """
     # Copy solution from Part 1 and update to add the outside location when in the kitchen.
     # Return strings such as "d, s" or "d, w" instead of printing them.
-    return "" # REPLACE ME
+    if location == "Bedroom":
+        return "d, s"
+    elif location == "Hallway":
+        return "w, a"
+    elif location == "Bathroom":
+        return "a"
+    elif location == "Kitchen":
+        return "d, w"
+    else:
+        return ""
 
 def find_room_by_direction(location: str, direction: str) -> str:
     """
     Determine the new location based on the current location and direction.
     """
     # Copy solution from Part 1 and update it to handle the outside
-    return "" # REPLACE ME
+    match(location):
+        case("Bedroom"):
+            match(direction):
+                case("s"):
+                    return "Hallway"
+                case("d"):
+                    return "Bathroom"
+                case (_):
+                    print("Invalid direction. Try again.")
+                    return location
+        case("Hallway"):
+            match(direction):
+                case("a"):
+                    return "Kitchen"
+                case("w"):
+                    return "Bedroom"
+                case (_):
+                    print("Invalid direction. Try again.")
+                    return location
+        case("Bathroom"):
+            match(direction):
+                case("a"):
+                    return "Bedroom"
+                case (_):
+                    print("Invalid direction. Try again.")
+                    return location
+        case("Kitchen"):
+            match(direction):
+                case("d"):
+                    return "Hallway"
+                case("w"):
+                    return "Outside"
+                case (_):
+                    print("Invalid direction. Try again.")
+                    return location
+        case(_):
+            return location
 
 
 def has_key_for_room(destination_room: str) -> bool:
@@ -64,7 +112,19 @@ def has_key_for_room(destination_room: str) -> bool:
         - If the destination_room is "Bathroom", the function checks the global variable `key1`
           (which represents Key 1 in the game).
     """
-    return False # REPLACE ME
+    global key1
+    global key2
+    match(destination_room):
+        case("Bathroom"):
+            if not key1: 
+                print("You don't have the key to enter this room.")
+            return key1 
+        case("Outside"):
+            if not key2: 
+                print("You don't have the key to enter this room.")
+            return key2
+        case (_):
+            return True 
 
 
     
@@ -87,28 +147,43 @@ def explore_room(location: str) -> None:
     Returns:
         None
     """
-
+    global key1
+    global key2
+    if location == "Hallway" and not key1:
+        print("You found Key 1")
+        key1 = True
+    elif location == "Bathroom" and not key2:
+        print("You found Key 2")
+        key2 = True
 
 def game_loop(location: str) -> None:
     """
     Main game loop handling room navigation and key pickup.
     """
-        
-    while True:    
+
+    while True:
         print_location(location)
         explore_room(location)
+
         available_directions = get_directions(location)
         print(f"You can go: {available_directions}")
-        chosen_direction = input("Where do you want to go? ('x' to exit) ").lower()
-        if chosen_direction  == 'x':
-            break
-        next_room = find_room_by_direction(location, chosen_direction)
-        
-        # Ensure the player has the key before moving; use has_key_for_room() to gate access.
-        location = next_room
 
-        # Add a conditional to detect reaching "Outside" so the loop can announce the escape and break the loop.
-    
+        chosen_direction = input("Where do you want to go? ('x' to exit) ").strip().lower()
+
+        if chosen_direction == 'x':
+            break
+
+        next_room = find_room_by_direction(location, chosen_direction)
+
+        # Check whether the player can enter the destination room
+        if has_key_for_room(next_room):
+            location = next_room
+
+        # Check whether the player escaped
+        if location == "Outside":
+            print("You escaped!")
+            break
+
     print("Exited the game.")
  
 
