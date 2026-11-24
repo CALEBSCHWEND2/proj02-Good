@@ -6,14 +6,14 @@
 
 # House map
 #             |----------|-----------|
-# (unlock w/  |          | (unlock w/| 
-#     Key 2)  |          |   Key 1)  | 
-#     Outside | Bedroom  X Bathroom  | 
+# (unlock w/  |          | (unlock w/|
+#     Key 2)  |          |   Key 1)  |
+#     Outside | Bedroom  X Bathroom  |
 #             |          |   *Key 2* |
 #   |----X----|---    ---|-----------|
 #   |         |          |
-#   | Kitchen   Hallway  | 
-#   |         |   *Key 1*| 
+#   | Kitchen   Hallway  |
+#   |         |   *Key 1*|
 #   |---------|----------|
 
 ## List of rooms
@@ -33,7 +33,7 @@ def print_location(location: str) -> None:
         print(f"You are in the {location}.")
     else:
         print("Unknown location.")
-        
+
 def get_directions(location: str) -> str:
     """
     Return possible directions to move from the current location.
@@ -100,7 +100,7 @@ def has_key_for_room(destination_room: str) -> bool:
     Check if the player has the required code-tracked key to enter a room.
 
     Args:
-        destination_room (str): The identifier of the room to check. 
+        destination_room (str): The identifier of the room to check.
                                 Possible values are "Outside" and "Bathroom".
 
     Returns:
@@ -116,18 +116,17 @@ def has_key_for_room(destination_room: str) -> bool:
     global key2
     match(destination_room):
         case("Bathroom"):
-            if not key1: 
+            if not key1:
                 print("You don't have the key to enter this room.")
-            return key1 
+            return key1
         case("Outside"):
-            if not key2: 
+            if not key2:
                 print("You don't have the key to enter this room.")
             return key2
         case (_):
-            return True 
+            return True
 
 
-    
 def explore_room(location: str) -> None:
     """
     Handle picking up objects in the current room.
@@ -141,7 +140,7 @@ def explore_room(location: str) -> None:
     message "You found Key 2".
 
     Args:
-        location (str): The current location of the player. Expected values 
+        location (str): The current location of the player. Expected values
                         are "Hallway" or "Bathroom".
 
     Returns:
@@ -181,11 +180,11 @@ def game_loop(location: str) -> None:
 
         # Check whether the player escaped
         if location == "Outside":
-            print("You escaped!")
-            break
+            print("You have escaped!")
+            return
 
     print("Exited the game.")
- 
+
 
 def start_game() -> None:
     """
